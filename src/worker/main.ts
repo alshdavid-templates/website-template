@@ -1,1 +1,1 @@
-console.warn("Hi");
+console.warn("Hi from Worker");
