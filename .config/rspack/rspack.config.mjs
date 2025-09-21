@@ -1,13 +1,41 @@
+import path from "node:path";
+import url from "node:url";
 import { defineConfig } from "@rspack/cli";
-import { rspack } from '@rspack/core';
-import HtmlWebpackPlugin from "html-webpack-plugin";
+import { rspack } from "@rspack/core";
+import { DeleteDirectoryPlugin } from "./delete-directory-plugin.mjs";
+import { HtmlPlugin } from "./html-plugin.mjs";
+
+const dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const root = path.dirname(path.dirname(dirname));
 
 export default defineConfig({
   experiments: {
     css: true,
+    outputModule: true,
   },
   entry: {
-    index: "./src/index.tsx",
+    index: "./src/gui/index.tsx",
+    worker: "./src/worker/main.ts",
+  },
+  output: {
+    filename: "[name].[contenthash].js",
+    path: path.join(root, "dist"),
+    module: true,
+    chunkFormat: "module",
+    chunkLoading: "import",
+    workerChunkLoading: "import",
+  },
+  resolve: {
+    extensions: ["...", ".ts", ".tsx", ".jsx"],
+    extensionAlias: {
+      ".js": [".ts", ".tsx", ".js"],
+    },
+    alias: {
+      react: "preact/compat",
+      "react-dom/test-utils": "preact/test-utils",
+      "react-dom": "preact/compat", // Must be below test-utils
+      "react/jsx-runtime": "preact/jsx-runtime",
+    },
   },
   module: {
     rules: [
@@ -49,37 +77,22 @@ export default defineConfig({
       },
       {
         test: /\.css$/i,
-        use: [rspack.CssExtractRspackPlugin.loader, 'css-loader'],
-        type: 'javascript/auto',
+        use: [rspack.CssExtractRspackPlugin.loader, "css-loader"],
+        type: "javascript/auto",
       },
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
+    new DeleteDirectoryPlugin({
+      directory: path.join(root, "dist"),
+    }),
+    new HtmlPlugin({
       minify: false,
       filename: "index.html",
-      template: "src/index.html",
+      template: "src/gui/index.html",
       inject: "head",
     }),
-    {
-      apply(compiler) {
-        compiler.hooks.compilation.tap(
-          "ScriptAttributeInjector",
-          (compilation) =>
-            HtmlWebpackPlugin.getHooks(compilation).alterAssetTags.tapAsync(
-              "ScriptAttributeInjector",
-              (data, cb) => {
-                data.assetTags.scripts = data.assetTags.scripts.map((asset) => {
-                  asset.attributes.type = "module";
-                  return asset;
-                });
-                return cb(null, data);
-              }
-            )
-        );
-      },
-    },
-    new rspack.CssExtractRspackPlugin({})
+    new rspack.CssExtractRspackPlugin({}),
   ],
   devServer: {
     hot: false,

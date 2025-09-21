@@ -1,18 +1,25 @@
 {
   "name": "@alshdavid/website-template",
   "version": "1.0.0",
-  "description": "",
+  "description": "Starter template for websites",
   "type": "module",
   "scripts": {
-    "dev": "npx rspack serve",
-    "build": "npx rspack --config ./rspack.config.mjs --mode production"
+    "dev": "npx rspack serve --config ./.config/rspack/rspack.config.mjs",
+    "build": "npx rspack --config ./.config/rspack/rspack.config.mjs --mode production",
+    "watch": "npx rspack --watch --config ./.config/rspack/rspack.config.mjs",
+    "serve": "npx http-server-rs -p 4200 ./dist",
+    "format": "npx prettier --write ./src/**/* ./.config/**/*"
+  },
+  "dependencies": {
+    "preact": "^10.27.2"
   },
   "devDependencies": {
     "@rspack/cli": "^1.5.5",
     "@rspack/core": "^1.5.5",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.4",
-    "preact": "^10.27.2",
+    "http-server-rs": "^0.0.6",
+    "prettier": "^3.6.2",
     "style-loader": "^4.0.0"
   }
 }
