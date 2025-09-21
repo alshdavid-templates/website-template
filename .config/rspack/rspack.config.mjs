@@ -97,7 +97,7 @@ export default defineConfig({
   ],
   devServer: {
     hot: false,
-    port: 8080,
+    port: 4200,
     historyApiFallback: true,
     allowedHosts: "all",
     host: "0.0.0.0",
@@ -107,5 +107,8 @@ export default defineConfig({
         value: "no-store",
       },
     ],
+    devMiddleware: {
+      writeToDisk: true,
+    },
   },
 });

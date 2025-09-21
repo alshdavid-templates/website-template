@@ -4,11 +4,12 @@
   "description": "Starter template for websites",
   "type": "module",
   "scripts": {
-    "dev": "npx rspack serve --config ./.config/rspack/rspack.config.mjs",
     "build": "npx rspack --config ./.config/rspack/rspack.config.mjs --mode production",
-    "watch": "npx rspack --watch --config ./.config/rspack/rspack.config.mjs",
+    "dev": "npx rspack serve --config ./.config/rspack/rspack.config.mjs",
+    "format": "npx prettier --write ./src/**/* ./.config/**/* ./.github/**/*",
     "serve": "npx http-server-rs -p 4200 ./dist",
-    "format": "npx prettier --write ./src/**/* ./.config/**/*"
+    "stats": "npx rspack build --analyze --config ./.config/rspack/rspack.config.mjs",
+    "watch": "npx rspack --watch --config ./.config/rspack/rspack.config.mjs"
   },
   "dependencies": {
     "preact": "^10.27.2"
