@@ -91,6 +91,7 @@ export default defineConfig({
       filename: "index.html",
       template: "src/gui/index.html",
       inject: "head",
+      baseHref: process.env.BASE_HREF,
     }),
     new rspack.CssExtractRspackPlugin({}),
   ],

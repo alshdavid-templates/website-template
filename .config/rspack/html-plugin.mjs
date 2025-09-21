@@ -75,6 +75,19 @@ export class HtmlPlugin extends HtmlWebpackPlugin {
             voidTag: false,
             meta: {},
           });
+
+          // Base Href
+          if (this.options.baseHref) {
+            data.assetTags.scripts.unshift({
+              tagName: "base",
+              attributes: {
+                href: this.options.baseHref,
+              },
+              voidTag: true,
+              meta: {},
+            });
+          }
+
           return cb(null, data);
         },
       );
