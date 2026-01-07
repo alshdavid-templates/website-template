@@ -12,7 +12,7 @@
     "watch": "npx rspack --watch --config ./.config/rspack/rspack.config.mjs"
   },
   "dependencies": {
-    "preact": "^10.27.2"
+    "preact": "^10.27.3"
   },
   "devDependencies": {
     "@rspack/cli": "^1.5.5",
