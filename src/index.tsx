@@ -1,10 +1,6 @@
 import "./styles.css";
 import { h, render } from "preact";
 
-new Worker(globalThis.importMap.resolve("worker")!, {
-  type: "module",
-});
-
 function App() {
   return (
     <div>

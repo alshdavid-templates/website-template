@@ -1,12 +1,15 @@
 import path from "node:path";
 import url from "node:url";
-import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
-import { DeleteDirectoryPlugin } from "./delete-directory-plugin.mjs";
+import { defineConfig } from "@rspack/cli";
 import { HtmlPlugin } from "./html-plugin.mjs";
 
+const baseHref = process.env.BASE_HREF || "/";
+console.log("BUILDING WITH BASE_HREF OF", baseHref);
+
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const root = path.dirname(path.dirname(dirname));
+const root = path.dirname(dirname);
+const repoRoot = path.dirname(root);
 
 export default defineConfig({
   experiments: {
@@ -14,12 +17,12 @@ export default defineConfig({
     outputModule: true,
   },
   entry: {
-    index: "./src/gui/index.tsx",
-    worker: "./src/worker/main.ts",
+    main: path.join(repoRoot, 'src', 'index.tsx')
   },
   output: {
-    filename: "[name].[contenthash].js",
-    path: path.join(root, "dist"),
+    filename: "[name].js",
+    path: path.join(repoRoot, "dist"),
+    publicPath: baseHref,
     module: true,
     chunkFormat: "module",
     chunkLoading: "import",
@@ -31,9 +34,11 @@ export default defineConfig({
       ".js": [".ts", ".tsx", ".js"],
     },
     alias: {
+      "preact": path.join(repoRoot, 'node_modules', 'preact', 'dist', 'preact.module.js'),
+      'preact/hooks': path.join(repoRoot, 'node_modules', 'preact','hooks','dist','hooks.module.js'),
       react: "preact/compat",
       "react-dom/test-utils": "preact/test-utils",
-      "react-dom": "preact/compat", // Must be below test-utils
+      "react-dom": "preact/compat",
       "react/jsx-runtime": "preact/jsx-runtime",
     },
   },
@@ -63,12 +68,15 @@ export default defineConfig({
               parser: {
                 syntax: "typescript",
                 tsx: true,
+                decorators: true,
               },
               transform: {
                 react: {
                   pragma: "h",
                   pragmaFrag: "Fragment",
                 },
+                decoratorVersion: "2022-03",
+                decoratorMetadata: true,
               },
             },
           },
@@ -83,13 +91,10 @@ export default defineConfig({
     ],
   },
   plugins: [
-    new DeleteDirectoryPlugin({
-      directory: path.join(root, "dist"),
-    }),
     new HtmlPlugin({
       minify: false,
       filename: "index.html",
-      template: "src/gui/index.html",
+      template: "src/index.html",
       inject: "head",
       baseHref: process.env.BASE_HREF,
     }),
