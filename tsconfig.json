@@ -5,12 +5,12 @@
     "moduleResolution": "nodenext",
     "lib": ["DOM", "ESNext"],
     "strict": true,
+    "declaration": true,
+    "isolatedDeclarations": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "jsx": "react",
     "jsxFactory": "h",
-    "types": [
-      "./.config/typings/import-map.d.ts"
-    ]
+    "types": []
   }
 }
